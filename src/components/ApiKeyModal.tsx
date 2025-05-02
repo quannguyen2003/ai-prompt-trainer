@@ -16,12 +16,12 @@ const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ open, onOpenChange }) => {
 
   const handleSave = () => {
     if (apiKey.trim() === '') {
-      toast.error("Please enter a valid API key");
+      toast.warning("We'll need an API key to evaluate your prompts. No worries if you don't have one yet - you can get one for free from Google AI Studio!");
       return;
     }
 
     setApiKey(apiKey.trim());
-    toast.success("API key saved successfully");
+    toast.success("Great! Your API key has been saved. You're all set to start evaluating prompts!");
     onOpenChange(false);
   };
 
@@ -29,10 +29,10 @@ const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ open, onOpenChange }) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Gemini API Key</DialogTitle>
+          <DialogTitle>Welcome to AI Prompt Trainer!</DialogTitle>
           <DialogDescription>
-            Enter your Google Gemini API key to use the prompt evaluation feature.
-            You can get an API key from the{" "}
+            To get started, we'll need your Google Gemini API key for evaluating your prompts.
+            You can get a free API key from the{" "}
             <a 
               href="https://ai.google.dev/" 
               target="_blank" 
@@ -47,27 +47,32 @@ const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ open, onOpenChange }) => {
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <label htmlFor="api-key" className="text-sm font-medium">
-              API Key
+              Your Gemini API Key
             </label>
             <Input
               id="api-key"
               type="password"
-              placeholder="Enter your Gemini API key"
+              placeholder="Paste your Gemini API key here"
               value={apiKey}
               onChange={(e) => setApiKeyState(e.target.value)}
             />
+            <p className="text-xs text-muted-foreground mt-1">
+              This key unlocks all the evaluation features of the app!
+            </p>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Your API key is stored locally in your browser and is not sent to our servers.
-          </p>
+          <div className="bg-secondary/30 p-3 rounded-md">
+            <p className="text-xs text-muted-foreground">
+              Your API key is stored securely in your browser and is never sent to our servers. It's only used to communicate directly between your browser and Google's Gemini API.
+            </p>
+          </div>
         </div>
         
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            I'll do this later
           </Button>
           <Button onClick={handleSave}>
-            Save
+            Save & Continue
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -76,3 +81,4 @@ const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ open, onOpenChange }) => {
 };
 
 export default ApiKeyModal;
+

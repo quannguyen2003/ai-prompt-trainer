@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Task } from '@/types';
 import { Lightbulb, Send, Eye } from "lucide-react";
+import { toast } from "sonner";
 
 interface PromptInputProps {
   currentTask: Task;
@@ -41,7 +42,16 @@ const PromptInput: React.FC<PromptInputProps> = ({ currentTask, onSubmit, isLoad
 
   const handleSubmit = () => {
     if (prompt.trim()) {
+      if (prompt.length < 10) {
+        toast.warning("Your prompt is a bit short. Adding more details will help get better results! Would you like to elaborate a bit more?");
+        return;
+      }
+      toast.success("Evaluating your prompt... This should take just a moment!");
       onSubmit(prompt);
+    } else {
+      toast("Let's add some content to your prompt before submitting. Even a few words will get us started!", {
+        description: "Your creative journey begins with the first word!",
+      });
     }
   };
 
@@ -79,11 +89,11 @@ const PromptInput: React.FC<PromptInputProps> = ({ currentTask, onSubmit, isLoad
             className="prompt-textarea"
             value={prompt}
             onChange={handleChange}
-            placeholder="Write your prompt here..."
+            placeholder="Write your prompt here... Be creative and specific!"
             disabled={isLoading}
           />
           <div className="flex justify-end text-sm text-muted-foreground">
-            {charCount} characters
+            {charCount} characters {charCount > 0 && charCount < 20 ? "(Adding more detail will help get better results!)" : ""}
           </div>
         </div>
       </CardContent>
@@ -93,7 +103,7 @@ const PromptInput: React.FC<PromptInputProps> = ({ currentTask, onSubmit, isLoad
           Preview
         </Button>
         <Button onClick={handleSubmit} disabled={!prompt.trim() || isLoading}>
-          {isLoading ? "Evaluating..." : "Submit for Evaluation"}
+          {isLoading ? "Evaluating your creativity..." : "Submit for Evaluation"}
           {!isLoading && <Send className="ml-2 h-4 w-4" />}
         </Button>
       </CardFooter>
@@ -102,3 +112,4 @@ const PromptInput: React.FC<PromptInputProps> = ({ currentTask, onSubmit, isLoad
 };
 
 export default PromptInput;
+

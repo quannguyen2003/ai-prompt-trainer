@@ -12,27 +12,50 @@ interface ResultsDisplayProps {
 
 const ScoreBadge: React.FC<{ score: number }> = ({ score }) => {
   let scoreClass = "score-low";
+  let message = "";
   
   if (score >= 80) {
     scoreClass = "score-high";
+    message = "Excellent!";
   } else if (score >= 60) {
     scoreClass = "score-medium";
+    message = "Good job!";
+  } else {
+    message = "Room to grow!";
   }
   
   return (
-    <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${scoreClass}`}>
-      {score}/100
+    <div className="flex flex-col items-end">
+      <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${scoreClass}`}>
+        {score}/100
+      </div>
+      <span className="text-xs mt-1">{message}</span>
     </div>
   );
 };
 
 const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
+  // Calculate average score for encouraging message
+  const averageScore = Math.round((result.prompt_score + result.output_score) / 2);
+  let encouragementMessage = "";
+  
+  if (averageScore >= 80) {
+    encouragementMessage = "Outstanding work! Your prompting skills are impressive!";
+  } else if (averageScore >= 60) {
+    encouragementMessage = "Great progress! You're well on your way to becoming a prompt expert!";
+  } else {
+    encouragementMessage = "Every attempt is a learning opportunity! Let's see how we can improve together.";
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Evaluation Results</h2>
+        <div>
+          <h2 className="text-2xl font-bold">Evaluation Results</h2>
+          <p className="text-sm text-muted-foreground mt-1">{encouragementMessage}</p>
+        </div>
         <Button variant="outline" onClick={onReset}>
-          Try Again
+          Try Another Approach
         </Button>
       </div>
 
@@ -47,7 +70,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
           <CardContent>
             <div className="space-y-4">
               <div>
-                <h4 className="font-medium mb-2">Strengths</h4>
+                <h4 className="font-medium mb-2">Your Strengths</h4>
                 <ul className="list-disc pl-5 space-y-1">
                   {result.prompt_evaluation.strengths.map((strength, index) => (
                     <li key={index} className="text-sm">{strength}</li>
@@ -55,7 +78,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
                 </ul>
               </div>
               <div>
-                <h4 className="font-medium mb-2">Areas for Improvement</h4>
+                <h4 className="font-medium mb-2">Growth Opportunities</h4>
                 <ul className="list-disc pl-5 space-y-1">
                   {result.prompt_evaluation.weaknesses.map((weakness, index) => (
                     <li key={index} className="text-sm">{weakness}</li>
@@ -76,7 +99,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
           <CardContent>
             <div className="space-y-4">
               <div>
-                <h4 className="font-medium mb-2">Strengths</h4>
+                <h4 className="font-medium mb-2">Output Strengths</h4>
                 <ul className="list-disc pl-5 space-y-1">
                   {result.output_evaluation.strengths.map((strength, index) => (
                     <li key={index} className="text-sm">{strength}</li>
@@ -84,7 +107,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
                 </ul>
               </div>
               <div>
-                <h4 className="font-medium mb-2">Areas for Improvement</h4>
+                <h4 className="font-medium mb-2">Refinement Areas</h4>
                 <ul className="list-disc pl-5 space-y-1">
                   {result.output_evaluation.weaknesses.map((weakness, index) => (
                     <li key={index} className="text-sm">{weakness}</li>
@@ -119,9 +142,10 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
         <TabsContent value="suggestions">
           <Card>
             <CardHeader>
-              <CardTitle>Suggestions to Improve Your Prompt</CardTitle>
+              <CardTitle>Suggestions to Elevate Your Prompt</CardTitle>
             </CardHeader>
             <CardContent>
+              <p className="text-sm mb-3">Here are some friendly suggestions to help make your prompt even more effective:</p>
               <ul className="list-disc pl-5 space-y-2">
                 {result.improvement_suggestions.map((suggestion, index) => (
                   <li key={index}>{suggestion}</li>
@@ -134,9 +158,10 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
         <TabsContent value="improved">
           <Card>
             <CardHeader>
-              <CardTitle>Improved Prompt Example</CardTitle>
+              <CardTitle>Enhanced Prompt Example</CardTitle>
             </CardHeader>
             <CardContent>
+              <p className="text-sm mb-3">Here's an example of how your prompt could be enhanced:</p>
               <div className="bg-secondary p-4 rounded-md whitespace-pre-wrap font-fira text-sm">
                 {result.improved_prompt_example}
               </div>
@@ -149,3 +174,4 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ result, onReset }) => {
 };
 
 export default ResultsDisplay;
+
