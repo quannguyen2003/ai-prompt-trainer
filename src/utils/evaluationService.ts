@@ -76,7 +76,7 @@ Return your evaluation in the following JSON format without any additional text:
 }`;
 
     // Using the Gemini API through a proxy endpoint
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
